@@ -1,37 +1,48 @@
-'use client';
+import { GetServerSideProps } from 'next'
+import { Product } from '@prisma/client'
+import prisma from '@/lib/db'
+import Link from 'next/link'
 
-import { useEffect, useState } from 'react';
-import Image from 'next/image'
+async function fetchProducts() {
+    try {
+        const products = await prisma.product.findMany()
+        console.log('🔥 Database connection successful:', products)
 
-type Product = {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    imageUrl: string;
-};
+        return products
+    } catch (error) {
+        console.log(error)
+        throw new Error('Failed to fetch products')
+    }
+}
 
-const Products = () => {
-    const [products, setProducts] = useState<Product[]>([]);
 
-    useEffect(() => {
-        fetch('/api/products')
-            .then(res => res.json())
-            .then(data => setProducts(data));
-    }, []);
+export const getServerSideProps: GetServerSideProps = async () => {
+    const products = await fetchProducts()
 
+    return {
+        props: {
+            products,
+        },
+    }
+}
+
+interface ProductsPageProps {
+    products: Product[]
+}
+
+export default function ProductsPage({ products }: ProductsPageProps) {
+    console.log('🌟 Page Products:', products)
     return (
-        <div>
-            {products.map(product => (
-                <div key={product.id}>
-                    <h2>{product.name}</h2>
-                    <Image src={product.imageUrl} alt={product.name} />
-                    <p>{product.description}</p>
-                    <p>Price: ${product.price}</p>
-                </div>
-            ))}
-        </div>
-    );
-};
+        <main>
+            <h1>Products</h1>
 
-export default Products;
+            <ul>
+                {products?.map((product: Product) => (
+                    <li key={product.id}>
+                        <Link href={`/products/${product.id}`}>{product.name}</Link>
+                    </li>
+                ))}
+            </ul>
+        </main>
+    )
+}
