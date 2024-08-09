@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { getProductById } from '@/lib/utils';
 import { StarIcon } from 'lucide-react';
@@ -6,11 +6,35 @@ import { mockProduct } from '@/mocks/mock-product';
 import PriceDisplay from '@/components/price-display';
 import ProductFeatures from '@/components/product-features';
 import PaymentOptions from '@/components/payment-options';
+import SizeSelector from '@/components/size-selector';
+import SizeGuideLink from '@/components/size-guide-link';
+import QuantitySelector from '@/components/quantity-selector';
+
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
   // const product = await getProductById(params.id);
   const product = mockProduct;
   const { name, rating, reviewCount, price, description, features, modelInfo } = product;
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
+  const [quantity, setQuantity] = useState(1);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+
+  const handleSizeChange = (size: string) => {
+    setSelectedSize(size);
+  };
+
+  const handleQuantityChange = (newQuantity: number) => {
+    setQuantity(newQuantity);
+  };
+
+  const handleSizeGuideClick = () => {
+    setIsSizeGuideOpen(true);
+  };
+
+  const closeSizeGuide = () => {
+    setIsSizeGuideOpen(false);
+  };
+
 
   if (!product) {
     return <div>Product not found</div>;
@@ -60,6 +84,10 @@ export default async function ProductPage({ params }: { params: { id: string } }
             <ProductFeatures features={features} />
             <p className="text-sm text-gray-600 mt-4 mb-4">{modelInfo}</p>
             <PaymentOptions />
+            <QuantitySelector
+              initialQuantity={quantity}
+              onQuantityChange={handleQuantityChange}
+            />
             <SizeSelector
               sizes={product.sizes}
               initialSize={selectedSize}
