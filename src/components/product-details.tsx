@@ -8,10 +8,11 @@ import PaymentOptions from '@/components/payment-options';
 import SizeSelector from '@/components/size-selector';
 import SizeGuideLink from '@/components/size-guide-link';
 import QuantitySelector from '@/components/quantity-selector';
-import { Product } from '@/types/product'; // Assume you have this type defined
+import SizeGuideModal from './size-guide-modal';
+// import { Product } from '@/types/product'; // Assume you have this type defined
 
 interface ProductDetailsProps {
-  product: Product;
+  product: any;
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
@@ -59,6 +60,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         initialSize={selectedSize}
         onSizeChange={handleSizeChange}
       />
+      <SizeGuideLink onClick={handleSizeGuideClick} />
       <SizeGuideModal isOpen={isSizeGuideOpen} onClose={() => setIsSizeGuideOpen(false)} />      <QuantitySelector
         initialQuantity={quantity}
         onQuantityChange={handleQuantityChange}
