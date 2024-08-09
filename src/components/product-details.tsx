@@ -59,8 +59,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         initialSize={selectedSize}
         onSizeChange={handleSizeChange}
       />
-      <SizeGuideLink onClick={handleSizeGuideClick} />
-      <QuantitySelector
+      <SizeGuideModal isOpen={isSizeGuideOpen} onClose={() => setIsSizeGuideOpen(false)} />      <QuantitySelector
         initialQuantity={quantity}
         onQuantityChange={handleQuantityChange}
       />
