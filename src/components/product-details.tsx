@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StarIcon } from 'lucide-react';
 import PriceDisplay from '@/components/price-display';
 import ProductFeatures from '@/components/product-features';
@@ -37,6 +37,23 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     setIsSizeGuideOpen(false);
   };
 
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isSizeGuideOpen) {
+        setIsSizeGuideOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscKey);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isSizeGuideOpen]);
+
+
+
+
   return (
     <div className="md:w-1/2 md:pl-8 mt-4 md:mt-0">
       <h1 className="text-3xl font-bold text-gray-900">{name}</h1>
@@ -61,7 +78,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         onSizeChange={handleSizeChange}
       />
       <SizeGuideLink onClick={handleSizeGuideClick} />
-      <SizeGuideModal isOpen={isSizeGuideOpen} onClose={() => setIsSizeGuideOpen(false)} />      <QuantitySelector
+      <SizeGuideModal isOpen={isSizeGuideOpen} onClose={closeSizeGuide} />
+      <QuantitySelector
         initialQuantity={quantity}
         onQuantityChange={handleQuantityChange}
       />
