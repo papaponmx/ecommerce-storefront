@@ -8,7 +8,8 @@ import PaymentOptions from '@/components/payment-options';
 import SizeSelector from '@/components/size-selector';
 import SizeGuideLink from '@/components/size-guide-link';
 import QuantitySelector from '@/components/quantity-selector';
-import SizeGuideModal from './size-guide-modal';
+import ProductDetailsClient from './client';
+import SizeGuideModal from '../size-guide-modal';
 // import { Product } from '@/types/product'; // Assume you have this type defined
 
 interface ProductDetailsProps {
@@ -55,40 +56,43 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
 
   return (
-    <div className="md:w-1/2 md:pl-8 mt-4 md:mt-0">
-      <h1 className="text-3xl font-bold text-gray-900">{name}</h1>
-      <div className="mt-2 flex items-center">
-        {[...Array(5)].map((_, i) => (
-          <StarIcon
-            key={i}
-            className={`h-5 w-5 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
-            fill="currentColor"
-          />
-        ))}
-        <span className="ml-2 text-sm text-gray-600">({reviewCount})</span>
+    <ProductDetailsClient >
+
+
+      <div className="md:w-1/2 md:pl-8 mt-4 md:mt-0">
+        <h1 className="text-3xl font-bold text-gray-900">{name}</h1>
+        <div className="mt-2 flex items-center">
+          {[...Array(5)].map((_, i) => (
+            <StarIcon
+              key={i}
+              className={`h-5 w-5 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+              fill="currentColor"
+            />
+          ))}
+          <span className="ml-2 text-sm text-gray-600">({reviewCount})</span>
+        </div>
+        <PriceDisplay price={price} />
+        <p className="mt-4 text-gray-700">{description}</p>
+        <ProductFeatures features={features} />
+        <p className="text-sm text-gray-600 mt-4 mb-4">{modelInfo}</p>
+        <p className="mt-4 text-gray-600">Stock: {stock}</p>
+        <SizeSelector
+          sizes={sizes}
+          initialSize={selectedSize}
+          onSizeChange={handleSizeChange}
+        />
+        <SizeGuideLink onClick={handleSizeGuideClick} />
+        <SizeGuideModal isOpen={isSizeGuideOpen} onClose={closeSizeGuide} />
+        <QuantitySelector
+          initialQuantity={quantity}
+          onQuantityChange={handleQuantityChange}
+        />
+        <PaymentOptions />
+        <button className="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
+          Add to Cart
+        </button>
       </div>
-      <PriceDisplay price={price} />
-      <p className="mt-4 text-gray-700">{description}</p>
-      <ProductFeatures features={features} />
-      <p className="text-sm text-gray-600 mt-4 mb-4">{modelInfo}</p>
-      <p className="mt-4 text-gray-600">Stock: {stock}</p>
-      <SizeSelector
-        sizes={sizes}
-        initialSize={selectedSize}
-        onSizeChange={handleSizeChange}
-      />
-      <SizeGuideLink onClick={handleSizeGuideClick} />
-      <SizeGuideModal isOpen={isSizeGuideOpen} onClose={closeSizeGuide} />
-      <QuantitySelector
-        initialQuantity={quantity}
-        onQuantityChange={handleQuantityChange}
-      />
-      <PaymentOptions />
-      <button className="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200">
-        Add to Cart
-      </button>
-      {/* You would add your SizeGuideModal here, controlled by isSizeGuideOpen state */}
-    </div>
+    </ProductDetailsClient >
   );
 };
 
