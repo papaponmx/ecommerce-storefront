@@ -10,6 +10,7 @@ import SizeGuideLink from '@/components/size-guide-link';
 import QuantitySelector from '@/components/quantity-selector';
 import ProductDetailsClient from './client';
 import SizeGuideModal from '../size-guide-modal';
+import ProductCombosSection from '../product-combo/section';
 // import { Product } from '@/types/product'; // Assume you have this type defined
 
 interface ProductDetailsProps {
@@ -92,6 +93,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           Add to Cart
         </button>
       </div>
+      <ProductCombosSection />
     </ProductDetailsClient >
   );
 };
