@@ -31,6 +31,10 @@ model Product {
   rating Float?
   reviewCount Int @default(0)
   variants ProductVariant[]
+  brandId String
+  // categoryId String
+  brand Brand @relation(fields: [brandId], references: [id])
+  // category Category @relation(fields: [categoryId], references: [id])
 }
 
 model ProductVariant {
@@ -64,3 +68,19 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 }
+
+model Brand {
+  id        String      @id @default(uuid())
+  name      String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  products Product[]
+  }
+
+// model Category {
+//   id        String      @id @default(uuid())
+//   name      String
+//   createdAt DateTime    @default(now())
+//   updatedAt DateTime    @updatedAt
+//   products Product[]
+// }
