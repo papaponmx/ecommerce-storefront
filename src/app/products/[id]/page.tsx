@@ -1,12 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
 import { getProductById } from '@/lib/utils';
-import { mockProduct } from '@/mocks/mock-product';
 import ProductDetails from '@/components/product-details';
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
-  // const product = await getProductById(params.id);
-  const product = mockProduct;
+  const product = await getProductById(params.id);
 
   if (!product) {
     return <div>Product not found</div>;
