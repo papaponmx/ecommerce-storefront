@@ -19,14 +19,21 @@ Table Product {
   price Float [not null]
   imageUrl String [not null]
   stock Int [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-  OrderItem OrderItem [not null]
   rating Float
   reviewCount Int [not null, default: 0]
-  variants ProductVariant [not null]
+  features String[] [not null]
+  sizes String[] [not null]
+  colors String[] [not null]
+  modelInfo String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   brandId String [not null]
+  categoryId String [not null]
   brand Brand [not null]
+  category Category [not null]
+  variants ProductVariant [not null]
+  orderItems OrderItem [not null]
+  paymentOptions PaymentOptions
 }
 
 Table ProductVariant {
@@ -69,7 +76,25 @@ Table Brand {
   products Product [not null]
 }
 
+Table Category {
+  id String [pk]
+  name String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  products Product [not null]
+}
+
+Table PaymentOptions {
+  id String [pk]
+  productId String [unique, not null]
+  installments Int [not null]
+  provider String [not null]
+  product Product [not null]
+}
+
 Ref: Product.brandId > Brand.id
+
+Ref: Product.categoryId > Category.id
 
 Ref: ProductVariant.productId > Product.id
 
@@ -78,3 +103,5 @@ Ref: Order.userId > User.id
 Ref: OrderItem.orderId > Order.id
 
 Ref: OrderItem.productId > Product.id
+
+Ref: PaymentOptions.productId - Product.id
