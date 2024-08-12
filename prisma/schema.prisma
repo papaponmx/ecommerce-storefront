@@ -3,6 +3,10 @@ generator client {
   binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -19,15 +23,33 @@ model User {
 }
 
 model Product {
-  id          String      @id @default(uuid())
+  id          String           @id @default(uuid())
   name        String
   description String
   price       Float
   imageUrl    String
   stock       Int
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   OrderItem   OrderItem[]
+  rating      Float?
+  reviewCount Int              @default(0)
+  variants    ProductVariant[]
+  brandId     String
+  // categoryId String
+  brand       Brand            @relation(fields: [brandId], references: [id])
+  // category Category @relation(fields: [categoryId], references: [id])
+}
+
+model ProductVariant {
+  id        String   @id @default(uuid())
+  productId String
+  name      String
+  price     Float
+  stock     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Order {
@@ -50,3 +72,19 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 }
+
+model Brand {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
+
+// model Category {
+//   id        String      @id @default(uuid())
+//   name      String
+//   createdAt DateTime    @default(now())
+//   updatedAt DateTime    @updatedAt
+//   products Product[]
+// }
